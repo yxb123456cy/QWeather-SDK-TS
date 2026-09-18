@@ -8,19 +8,15 @@
   "engines": {
     "node": ">=20"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["dist", "README.md", "LICENSE"],
   "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
         "types": "./dist/index.d.cts",
@@ -35,9 +31,19 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format --write .",
+    "lint:fix": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "pnpm build"
+    "test:coverage": "vitest run --coverage",
+    "size": "size-limit",
+    "attw": "tsx scripts/attw.ts",
+    "publint": "publint --strict",
+    "secret:scan": "secretlint \"**/*\"",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm size && pnpm pack && pnpm attw && pnpm publint",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "prepublishOnly": "pnpm verify"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
@@ -45,19 +51,24 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@arethetypeswrong/core": "^0.18.5",
     "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^3.0.3",
+    "@secretlint/secretlint-rule-pattern": "^13.0.5",
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.5",
+    "@size-limit/file": "^14.0.0",
     "@types/node": "^22.10.2",
+    "@vitest/coverage-v8": "^5.0.1",
+    "lefthook": "^2.1.14",
     "msw": "^2.7.0",
+    "publint": "^0.3.24",
+    "secretlint": "^13.0.5",
+    "size-limit": "^14.0.0",
+    "tinyglobby": "^0.2.17",
     "tsup": "^8.3.5",
     "tsx": "^4.23.13",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   },
-  "keywords": [
-    "qweather",
-    "weather",
-    "sdk",
-    "typescript",
-    "esm"
-  ]
+  "keywords": ["qweather", "weather", "sdk", "typescript", "esm"]
 }

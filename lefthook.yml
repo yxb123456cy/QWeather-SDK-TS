@@ -1,0 +1,43 @@
+# lefthook.yml — 本地 pre-commit 钩子
+# 安装:pnpm install(自动通过 postinstall 注册)
+# 手动跑:pnpm lefthook run pre-commit
+
+pre-commit:
+  parallel: true
+  commands:
+    # 1. 密钥泄露检测 — 拦截和风 key / AWS / GitHub PAT / 通用私钥
+    secret-scan:
+      glob: "*"
+      exclude:
+        - ".env.example"
+        - "**/*.test.ts"
+        - "test/fixtures/**"
+        - "docs/**"
+        - "LICENSE"
+      run: pnpm exec secretlint "{staged_files}" || secretlint "{staged_files}"
+      fail_text: |
+        ❌ 检测到可能的密钥泄露!
+        请检查上述文件,移除后再提交。
+        参考:.github/SECURITY.md
+
+    # 2. Biome format + lint on staged files(自动修复可修的部分)
+    biome-check:
+      glob: "*.{ts,tsx,js,jsx,json}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched -- {staged_files}
+      stage_fixed: true
+
+    # 3. 阻止大文件入库(> 500KB)
+    block-large-files:
+      run: node scripts/block-large-files.mjs {staged_files}
+
+    # 4. 阻止 merge 标记误入
+    no-merge-marks:
+      run: node scripts/no-merge-marks.mjs {staged_files}
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: pnpm typecheck
+    test:
+      run: pnpm test

@@ -1,6 +1,6 @@
 import { createClient } from '../src';
 
-const client = createClient({ key: process.env['QWEATHER_KEY'] ?? 'demo-key' });
+const client = createClient({ key: process.env.QWEATHER_KEY ?? 'demo-key' });
 
 const now = await client.weather.now({ location: '101010100' }); // 北京
 console.log(`${now.now.text}  ${now.now.temp}°C  体感 ${now.now.feelsLike}°C`);

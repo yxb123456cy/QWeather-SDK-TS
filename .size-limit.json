@@ -1,0 +1,20 @@
+[
+  {
+    "name": "ESM bundle",
+    "path": "dist/index.js",
+    "brotli": false,
+    "limit": "12 KB"
+  },
+  {
+    "name": "CJS bundle",
+    "path": "dist/index.cjs",
+    "brotli": false,
+    "limit": "14 KB"
+  },
+  {
+    "name": "Type declarations",
+    "path": "dist/index.d.ts",
+    "brotli": false,
+    "limit": "20 KB"
+  }
+]

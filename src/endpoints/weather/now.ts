@@ -25,7 +25,11 @@ export async function getWeatherNow(
   )) as { code?: string; [k: string]: unknown };
   // 业务错误码先于 schema 校验抛出
   if (raw.code && raw.code !== '200') {
-    throw mapApiError({ message: 'QWeather API error', code: raw.code, endpoint: '/v7/weather/now' });
+    throw mapApiError({
+      message: 'QWeather API error',
+      code: raw.code,
+      endpoint: '/v7/weather/now',
+    });
   }
   const parsed = WeatherNowResponseSchema.parse(raw);
   return parsed as unknown as WeatherNowResponse;

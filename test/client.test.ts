@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createClient, QWeatherError } from '../src';
+import { QWeatherError, createClient } from '../src';
 
 const originalFetch = globalThis.fetch;
 
@@ -20,8 +20,9 @@ function mockJsonResponse(body: unknown, status = 200, headers: Record<string, s
 
 describe('QWeatherClient', () => {
   it('throws when no API key is provided', () => {
-    delete process.env.QWEATHER_KEY;
+    vi.stubEnv('QWEATHER_KEY', '');
     expect(() => createClient({})).toThrow(/API key is required/);
+    vi.unstubAllEnvs();
   });
 
   it('reads API key from QWEATHER_KEY env', () => {
@@ -78,6 +79,8 @@ describe('QWeatherClient', () => {
     globalThis.fetch = mock as unknown as typeof globalThis.fetch;
 
     const client = createClient({ key: 'test-key', retry: { maxRetries: 0 } });
-    await expect(client.weather.now({ location: '101010100' })).rejects.toBeInstanceOf(QWeatherError);
+    await expect(client.weather.now({ location: '101010100' })).rejects.toBeInstanceOf(
+      QWeatherError,
+    );
   });
 });

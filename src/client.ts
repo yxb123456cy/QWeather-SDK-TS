@@ -1,21 +1,21 @@
-import { ofetch, type $Fetch } from 'ofetch';
-import { signRequest, type Credential } from './auth/sign';
-import { QWeatherError, mapApiError, NetworkError } from './errors';
+import { type $Fetch, ofetch } from 'ofetch';
+import { type Credential, signRequest } from './auth/sign';
+import { createAirAPI } from './endpoints/air';
+import { createGeoAPI } from './endpoints/geo';
+import { createIndicesAPI } from './endpoints/indices';
+import { createWarningAPI } from './endpoints/warning';
+import { createWeatherAPI } from './endpoints/weather';
+import { NetworkError, QWeatherError, mapApiError } from './errors';
 import {
   DEFAULT_MAX_RETRIES,
   DEFAULT_TIMEOUT,
   SDK_VERSION,
   USER_AGENT,
 } from './internal/constants';
-import { noopLogger, type LoggerFn } from './internal/logger';
+import { type LoggerFn, noopLogger } from './internal/logger';
 import { defaultBackoff, isRetryableStatus } from './transport/retry';
 import type { HostKey, LangCode, Unit } from './types/common';
 import { buildUrl, toQueryRecord } from './utils/url';
-import { createAirAPI } from './endpoints/air';
-import { createGeoAPI } from './endpoints/geo';
-import { createIndicesAPI } from './endpoints/indices';
-import { createWarningAPI } from './endpoints/warning';
-import { createWeatherAPI } from './endpoints/weather';
 
 export interface QWeatherClientOptions {
   /** API Key(必填,也可通过 QWEATHER_KEY 环境变量传入) */
@@ -62,7 +62,7 @@ export class QWeatherClient {
   indices: ReturnType<typeof createIndicesAPI>;
 
   constructor(opts: QWeatherClientOptions) {
-    const key = opts.key ?? process.env['QWEATHER_KEY'];
+    const key = opts.key ?? process.env.QWEATHER_KEY;
     if (!key) {
       throw new Error(
         '[qweather] API key is required. Pass `key` option or set QWEATHER_KEY env var.',
@@ -98,11 +98,7 @@ export class QWeatherClient {
   }
 
   /** 暴露给 endpoint 模块的内部请求方法 */
-  async request<T>(
-    host: HostKey,
-    path: string,
-    params: object = {},
-  ): Promise<T> {
+  async request<T>(host: HostKey, path: string, params: object = {}): Promise<T> {
     const merged: Record<string, string> = toQueryRecord({
       lang: this.#opts.lang,
       unit: this.#opts.unit,
@@ -112,7 +108,6 @@ export class QWeatherClient {
     const url = buildUrl(host, path);
 
     let attempt = 0;
-    // biome-ignore lint/correctness/noConstantCondition: retry loop
     while (true) {
       let raw: T;
       try {

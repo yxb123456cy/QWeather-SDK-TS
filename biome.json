@@ -8,6 +8,11 @@
   "files": {
     "ignore": ["dist", "node_modules", "coverage"]
   },
+  "json": {
+    "formatter": {
+      "enabled": false
+    }
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

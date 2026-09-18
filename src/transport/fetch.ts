@@ -1,4 +1,4 @@
-import { ofetch, type $Fetch } from 'ofetch';
+import { type $Fetch, ofetch } from 'ofetch';
 import { USER_AGENT } from '../internal/constants';
 
 /** 构建一个全局共享的 ofetch 实例,挂上默认 User-Agent / 超时 */

@@ -9,7 +9,10 @@ export interface GeoTopParams {
 }
 
 /** 热门城市列表 */
-export async function geoTop(client: QWeatherClient, params: GeoTopParams = {}): Promise<GeoTopResponse> {
+export async function geoTop(
+  client: QWeatherClient,
+  params: GeoTopParams = {},
+): Promise<GeoTopResponse> {
   const raw = await client.request<unknown>('geo', '/v2/city/top', params);
   const parsed = GeoTopResponseSchema.parse(raw);
   return parsed as GeoTopResponse;
