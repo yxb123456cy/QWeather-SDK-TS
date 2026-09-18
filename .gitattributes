@@ -1,0 +1,5 @@
+# 统一仓库内文本文件行尾为 LF,避免 Windows CRLF 污染
+* text=auto eol=lf
+
+# 锁文件由包管理器生成,保持原样(不要改行尾)
+pnpm-lock.yaml -text

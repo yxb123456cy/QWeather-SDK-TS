@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+
+# 环境变量 / 密钥
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# 日志 / 系统
+*.log
+.DS_Store
+
+# 编辑器
+.vscode/
+.idea/
